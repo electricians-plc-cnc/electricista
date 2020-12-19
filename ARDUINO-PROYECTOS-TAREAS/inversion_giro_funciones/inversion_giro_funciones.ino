@@ -48,9 +48,6 @@ void setup() {
 
 void loop() {
     Serial.begin(9600);
-
-    
-    
     derecha();
     delay(tiempo);
     izquierda();
@@ -63,23 +60,35 @@ void loop() {
 void derecha(){
   int estado_auto_sale = digitalRead(pin_auto_sale); // pin 9
   boolean activado = false;
+  boolean setear = false;
   if (estado_auto_sale == LOW){
-    activado = true;
-    if(activado==true){
-      inversionGiroIzquierda();
-    }
-  }
+    setear = true;  
+    if (setear==true){
+      activado = true;
+      if(activado==true){
+        inversionGiroIzquierda();
+        delay(tiempo);
+      }
+   }
+ }
 }
 
 void izquierda(){
+  Serial.begin(9600);
   int estado_auto_salio = digitalRead(pin_auto_salio); // pin 10
   boolean activado = false;
+  boolean setear = false;
   if (estado_auto_salio == LOW){
-    activado = true;
-    if(activado==true){
-      inversionGiroDerecha();
+    setear = true; 
+    if (setear==true){
+      activado = true;
+      if(activado==true){
+        Serial.println("Activado");
+        inversionGiroDerecha();
+        delay(tiempo);
+      }
     }
-  }
+   }
 }
 
 void inversionGiroDerecha(){
