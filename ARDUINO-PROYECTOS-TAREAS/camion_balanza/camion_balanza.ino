@@ -27,6 +27,8 @@ const int pin_barrera_up = 8; // i2 - Sensor que detecta que la barrera esta arr
 const int pin_barrera_down = 9; // i3 - Sensor que detecta que la barrera esta baja.
 const int pin_pulsador_up = 10; // i4 - Pulsador de apertura
 const float pin_weight_camion = 11; //  i5 - Peso del camion
+int pin_auto_sale = 12; // i5 - Sensor que activará la aplicación de la función del giro hacia la derecha
+int pin_auto_salio = 13; // i6 - Sensor que activará la aplicación de la función del giro hacia la izquierda
 
 const int estado_camion_detected = 0 ; // i1 
 const int estado_barrera_up = 0; // i2 
@@ -80,6 +82,8 @@ void setup(){
     pinMode(pin_luz_verde, OUTPUT); // Declaro la salida
     pinMode(pin_luz_naranja, OUTPUT); // Declaro la salida
     pinMode(pin_luz_roja, OUTPUT); // Declaro la salida
+    pinMode(pin_auto_sale, INPUT_PULLUP);// Declaro la entrada.
+    pinMode(pin_auto_salio, INPUT_PULLUP);// Declaro la entrada.
 
   } // cierro setup
   
@@ -126,7 +130,12 @@ void camionDetected (){
           Serial.println('Se abre puerta por botón pulsado');
           delay(miniTiempo); 
           digitalWrite(pin_luz_verde, HIGH); // q3 
-          puerta();
+          
+            derecha();
+            delay(tiempo);
+            izquierda();
+            delay(tiempo);
+          
           pesoCamion = 0;
           totalContado = contador++;
           }else{
@@ -137,7 +146,12 @@ void camionDetected (){
       }else { 
         digitalWrite(pin_luz_verde, HIGH); // q3 
         Serial.println('Peso correcto');
-        puerta();
+        
+          derecha();
+          delay(tiempo);
+          izquierda();
+          delay(tiempo);
+        
         pesoCamion = 0;
         totalSinPagar = sinPagarCta++;
         delay(miniTiempo);
@@ -171,32 +185,101 @@ float halloY(float x1, float x2, float y1, float y2, float inX){
 
 
 
-void puerta(){
-    boolean cerrado = true;
-    boolean abierto = false;
-    //estado_barrera_up = digitalRead(pin_barrera_up); // i2 
-    //estado_barrera_down = digitalRead(pin_barrera_down); // i3
-    
-    if ( (estado_barrera_down == HIGH) && (estado_barrera_up == LOW)){
-      cerrado = false;
-      
-      if (cerrado = false){
-        digitalWrite(pin_contactor_up, HIGH); // q1
-        digitalWrite(pin_contactor_down, LOW); // q2
-        cerrado = true;
-        }
-     }else if ( (estado_barrera_down == LOW) && (estado_barrera_up == HIGH)){
-       delay(tiempo);
-       abierto = true;
+ 
+void derecha(){
+  int estado_auto_sale = digitalRead(pin_auto_sale); // pin 9
+  boolean activado = false;
+  if (estado_auto_sale == LOW){
+    activado = true;
+    if(activado==true){
+      inversionGiroIzquierda();
+    }
+  }
+}
+
+void izquierda(){
+  int estado_auto_salio = digitalRead(pin_auto_salio); // pin 10
+  boolean activado = false;
+  if (estado_auto_salio == LOW){
+    activado = true;
+    if(activado==true){
+      inversionGiroDerecha();
+    }
+  }
+}
+
+void inversionGiroDerecha(){
+  
+  boolean giro_cierro = false;
+  boolean giro_abro = false;
+  
+  int estado_barrera_up = digitalRead(pin_barrera_up); // i2 - pin 6
+  int estado_barrera_down = digitalRead(pin_barrera_down); // i3 - pin 4
+ 
+        if (estado_barrera_up == HIGH && estado_barrera_down == LOW ){
+          
+          giro_cierro = true;
+          giro_abro = false;
+
+              if(giro_cierro == true && giro_abro == false ){
+              
+                  digitalWrite(pin_contactor_up, HIGH);   
+                  digitalWrite(pin_contactor_down, LOW); 
+                  
+              }
+   
+        }if (estado_barrera_up == LOW && estado_barrera_down == HIGH ){
+          
+          giro_cierro = false;
+          giro_abro = true;
+                
+                if (giro_cierro == false && giro_abro == true ){
+            
+                  digitalWrite(pin_contactor_up, LOW);   
+                  digitalWrite(pin_contactor_down, LOW); 
+                 
+
+              }      
+       }
        
-        if (abierto = true){
-        digitalWrite(pin_contactor_up, LOW); // q1
-        digitalWrite(pin_contactor_down, HIGH); // q2
-        }
-      }else {
-        digitalWrite(pin_contactor_up, LOW); // q1
-        digitalWrite(pin_contactor_down, LOW); // q2
-        } 
-        
-} 
+}       
+       
+       
+       
+       
+void inversionGiroIzquierda(){
+  
+  boolean giro_cierro = false;
+  boolean giro_abro = false;
+  
+  int estado_barrera_up = digitalRead(pin_barrera_up); 
+  int estado_barrera_down = digitalRead(pin_barrera_down); 
+ 
+        if (estado_barrera_up == LOW && estado_barrera_down == HIGH ){
+          
+          giro_cierro = true;
+          giro_abro = false;
+
+              if(giro_cierro == true && giro_abro == false ){
+              
+                  digitalWrite(pin_contactor_up, LOW);   
+                  digitalWrite(pin_contactor_down, HIGH); 
+                  
+              }
+   
+        }if (estado_barrera_up == HIGH && estado_barrera_down == LOW ){
+          
+          giro_cierro = false;
+          giro_abro = true;
+                
+                if (giro_cierro == false && giro_abro == true ){
+            
+                  digitalWrite(pin_contactor_up, LOW);   
+                  digitalWrite(pin_contactor_down, LOW); 
+                 
+
+              }      
+       }
+ 
+}
 
