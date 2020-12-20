@@ -1,25 +1,30 @@
-
 /* Autor: María Eugenia Szwedowski - ME Diseño Web - Peak Power Eléctricistas.
-AJUSTE DEL COSENO DE PHI POR CONDENSADORES. En esta primera instancia se plantea el formulómetro.
+AJUSTE DEL COSENO DE PHI POR CONDENSADORES. En esta segunda instancia se plantea la aplicación de datos ingresados externamente.
 El objetivo es aplicar las fórmulas adquiridas en el curso técnico de Mantenimiento Industrial para el proyecto arduino.
-Fecha: 07/12/2020
+Observación: en esta etapa estoy analizando que los datos parseados de string a int no pueden superar más de 4 char sino creashea
+Montevideo, Uruguay.
+Fecha: 19/12/2020
 */
 
-    const float cosPhiUTE = 0.9200;
-    const float potenciaACTIVA = 1500.00; // MODIFICAR: ingresará por dato analógico
-    const float frecuencia = 50.00; // MODIFICAR: ingresará por dato analógico
-    const float amper = 10.00; // MODIFICAR: ingresará por dato analógico
-    const float volt = 230.00; // MODIFICAR: ingresará por dato analógico
-    const float lin = 1.00;
-    const float linTrifasica = sqrt(3);
+String dato=""; // Ingreso valor numérico de potencia activa por teclado
+String dato1=""; // Ingreso valor numérico de frecuencia por teclado
+String dato2=""; // Ingreso valor numérico de voltaje de la línea por teclado
+String dato3=""; // Ingreso valor numérico de amperaje de la línea por teclado
+const float lin = 1.00;
+const float linTrifasica = sqrt(3);
+const float cosPhiUTE = 0.9200;
 
-void setup(){
-  Serial.begin(9600);
-    uteDatos();
-    halloDatos(); 
-  } 
 
-void loop(){} 
+
+
+void setup() { 
+  Serial.begin(9600); // Abre puerto serie con la velocidad de 9600 baudios (bit por segundo) 
+  inicio();
+}
+
+
+void loop() {
+}
 
 
 
@@ -61,8 +66,84 @@ float cosPhiGrados(float cosPhi){
 } 
 
 
+
+void inicio(){
+  int pActiva;
+  int frecuencia;
+  int voltaje;
+  int amperaje;
+  
+  Serial.println("Ingrese la Potencia Activa : ");
+  while(Serial.available()==0){};// Pausa
+  
+  if(Serial.available() > 0){
+    delay(20);
+    while (Serial.available() > 0) {
+    dato += (char)Serial.read();
+      }
+    Serial.print("El valor es: ");
+    Serial.println(dato);
+    pActiva = dato.toInt();
+    Serial.flush();
+  }
+  
+  Serial.println("Ingrese la frecuencia : ");
+  while(Serial.available()==0){};// Pausa
+  
+  if(Serial.available() > 0){
+    delay(20);
+    while (Serial.available() > 0) {
+    dato1 += (char)Serial.read();
+      }
+    Serial.print("El valor es: ");
+    Serial.println(dato1);
+    frecuencia = dato1.toInt();
+    Serial.flush();
+  }  
+  
+  
+  
+  Serial.println("Ingrese el voltaje de línea : ");
+  while(Serial.available()==0){};// Pausa
+  
+  if(Serial.available() > 0){
+    delay(20);
+    while (Serial.available() > 0) {
+    dato2 += (char)Serial.read();
+      }
+    Serial.print("El valor es: ");
+    Serial.println(dato2);
+    voltaje = dato2.toInt();
+    Serial.flush();
+  } 
+  
+  
+  Serial.println("Ingrese el amperaje de línea : ");
+  while(Serial.available()==0){};// Pausa
+  
+  if(Serial.available() > 0){
+    delay(20);
+    while (Serial.available() > 0) {
+    dato3 += (char)Serial.read();
+      }
+    Serial.print("El valor es: ");
+    Serial.println(dato3);
+    amperaje = dato3.toInt();
+    Serial.flush();
+  } 
+  Serial.println("");
+  Serial.println("------------");
+  halloDatos(pActiva, frecuencia, amperaje, voltaje);
+}
+
+
 // -------------- DATOS A HALLAR ------------------------//
-    void halloDatos(){
+    void halloDatos(int p, int f, int a, int v){
+    
+    float potenciaACTIVA =(float)p;
+    float frecuencia = (float)f;
+    float amper=(float)a;
+    float volt=(float)v;
     
     Serial.println("DATOS HALLADOS DE LA LINEA");
     Serial.print("LINEA - Potencia Aparente : ");
@@ -136,6 +217,8 @@ float cosPhiGrados(float cosPhi){
     
     }
 
+
+
 // -------------- DATOS UTE ------------------------//
     void uteDatos(){
     Serial.begin(9600);
@@ -152,5 +235,3 @@ float cosPhiGrados(float cosPhi){
     Serial.print("------------");
     
     } 
-
-

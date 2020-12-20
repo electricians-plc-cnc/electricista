@@ -1,8 +1,8 @@
-
 /* Autor: María Eugenia Szwedowski - ME Diseño Web - Peak Power Eléctricistas.
-AJUSTE DEL COSENO DE PHI POR CONDENSADORES. En esta primera instancia se plantea el formulómetro.
+AJUSTE DEL COSENO DE PHI POR CONDENSADORES. En esta segunda instancia se plantea la aplicación de datos ingresados externamente.
 El objetivo es aplicar las fórmulas adquiridas en el curso técnico de Mantenimiento Industrial para el proyecto arduino.
-Fecha: 07/12/2020
+Montevideo, Uruguay.
+Fecha: 19/12/2020
 */
 
     const float cosPhiUTE = 0.9200;
