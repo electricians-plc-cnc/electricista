@@ -10,6 +10,12 @@ String dato=""; // Ingreso valor numérico de potencia activa por teclado
 String dato1=""; // Ingreso valor numérico de frecuencia por teclado
 String dato2=""; // Ingreso valor numérico de voltaje de la línea por teclado
 String dato3=""; // Ingreso valor numérico de amperaje de la línea por teclado
+
+int pinCondensador1=2; //Condensador Q1
+int pinCondensador2=3; //Condensador Q2
+int pinCondensador3=4; //Condensador Q3
+int pinCondensador4=5; //Condensador Q4
+
 const float lin = 1.00;
 const float linTrifasica = sqrt(3);
 const float cosPhiUTE = 0.9200;
@@ -19,6 +25,10 @@ const float cosPhiUTE = 0.9200;
 
 void setup() { 
   Serial.begin(9600); // Abre puerto serie con la velocidad de 9600 baudios (bit por segundo) 
+  pinMode(pinCondensador1, OUTPUT); // Declaro la salida.
+  pinMode(pinCondensador2, OUTPUT); // Declaro la salida.
+  pinMode(pinCondensador3, OUTPUT); // Declaro la salida.
+  pinMode(pinCondensador4, OUTPUT); // Declaro la salida.
   inicio();
 }
 
@@ -218,6 +228,29 @@ void inicio(){
     float amperCondensador = varCond/volt;
     Serial.print("Calculado en  Amper -  ");
     Serial.println(amperCondensador);
+    
+    
+    if (varCond<=500){
+        digitalWrite(pinCondensador1, HIGH);   
+        digitalWrite(pinCondensador2, LOW); 
+        digitalWrite(pinCondensador3, LOW);   
+        digitalWrite(pinCondensador4, LOW);
+      }else if (varCond >=501 && varCond <=1000){
+        digitalWrite(pinCondensador1, HIGH);   
+        digitalWrite(pinCondensador2, HIGH); 
+        digitalWrite(pinCondensador3, LOW);   
+        digitalWrite(pinCondensador4, LOW);
+      }else if (varCond >=1001 && varCond <=1500){
+        digitalWrite(pinCondensador1, HIGH);   
+        digitalWrite(pinCondensador2, HIGH); 
+        digitalWrite(pinCondensador3, HIGH);   
+        digitalWrite(pinCondensador4, LOW);
+      }else if (varCond >=1501){
+        digitalWrite(pinCondensador1, HIGH);   
+        digitalWrite(pinCondensador2, HIGH); 
+        digitalWrite(pinCondensador3, HIGH);   
+        digitalWrite(pinCondensador4, HIGH);
+      }
     
     }
 
